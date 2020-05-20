@@ -5,7 +5,11 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 public class Actividad2 extends JFrame {
-
+    
+    static final boolean REDIMENSIONABLE = true;
+    
+    int valorTiempo = 0;
+    
     //Declaro Objetos.
     JSlider velocidad, distancia;
     JLabel Labelvelocidad, Labeldistancia, Labeltiempo;
@@ -13,11 +17,10 @@ public class Actividad2 extends JFrame {
     //Constructor.
     public Actividad2() {
         super("Tiempo");
-
         setSize(1050, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(true);
+        setResizable(REDIMENSIONABLE);
 
         //FlowLayout
         setLayout(new GridLayout(1, 2));
@@ -46,21 +49,36 @@ public class Actividad2 extends JFrame {
         setVisible(true);
         add(velocidad);
         add(distancia);
-        add(Labelvelocidad);
-        add(Labeldistancia);
-        add(Labeltiempo);
-        
-        //uso el objeto velocidad para obtner el evento del slider
-        velocidad.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSlider1StateChanged(evt);
+
+        distancia.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int distanciavalue = distancia.getValue();
+                Labeldistancia.setText("Distancia: " + distanciavalue);
+
+                valorTiempo = distancia.getValue() / velocidad.getValue();
+
+                Labeltiempo.setText("Tiempo: " + valorTiempo);
             }
         });
         
+        velocidad.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int velocidadvalue = velocidad.getValue();
+                Labelvelocidad.setText("Velocidad: " + velocidadvalue);
+
+                valorTiempo = distancia.getValue() / velocidad.getValue();
+
+                Labeltiempo.setText("Tiempo: " + valorTiempo);
+            }
+        });
+
+        add(Labelvelocidad);
+        add(Labeldistancia);
+        add(Labeltiempo);
     }
-    
-    
-    
+
     private void setLookAndFeel() {
         try {
             UIManager.setLookAndFeel(
@@ -70,29 +88,21 @@ public class Actividad2 extends JFrame {
             //No hacer nada
         }
     }
-    
-    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {                                      
-        // TODO add your handling code here:
-        //calcularVelocidad();
-        System.out.println("FUNCIONA");
-    } 
-    
-    public void calcularVelocidad(){
-        // x = x_inicial + velocidad * t
-        // x / v = t
-        int resultadoTiempo = 0;
+
+    /*public class event {
+    public void calcularVelocidad (ChangeEvent e){
+
+        int value = distancia.getValue();
         
-        resultadoTiempo = distancia.getValue() / velocidad.getValue();
-        
-        //Labeltiempo.setText( String.valueOf(resultadoTiempo));
-        
-        Labeltiempo.setText("Tiempo"+ resultadoTiempo);
-        
-    }
+        value = distancia.getValue() / velocidad.getValue();
+
+        Labeltiempo.setText("Tiempo: " +value);
     
-    
+} 
+    }*/
     public static void main(String[] args) {
         //llamara al contructor
-        new Actividad2();
+        SwingUtilities.invokeLater(Actividad2::new);
+
     }
 }
